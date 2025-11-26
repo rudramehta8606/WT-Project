@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShoeStore Admin Panel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      background-color: #0e0e12;
+      color: #eee;
+    }
+    header {
+      background: #1b1b22;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #2c2c34;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      color: #4a90e2;
+    }
+    nav label {
+      margin: 0 15px;
+      color: #ddd;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    nav label:hover {
+      color: #4a90e2;
+    }
+    section {
+      display: none;
+      min-height: 100vh;
+      padding: 60px 40px;
+      background: #18181f;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    input[type="radio"] {
+      display: none;
+    }
+    #dashboard:checked ~ .pages #dashboard-page,
+    #products:checked ~ .pages #products-page,
+    #orders:checked ~ .pages #orders-page,
+    #wishlist:checked ~ .pages #wishlist-page,
+    #users:checked ~ .pages #users-page,
+    #login:checked ~ .pages #login-page,
+    #signup:checked ~ .pages #signup-page {
+      display: flex;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #4a90e2;
+    }
+    p {
+      max-width: 700px;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #bbb;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #357abd;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .card {
+      background: #23232b;
+      padding: 25px;
+      border-radius: 8px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    }
+    .card h3 {
+      color: #4a90e2;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: collapse;
+      background: #202028;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 15px;
+      border-bottom: 1px solid #2e2e38;
+      text-align: left;
+    }
+    th {
+      background: #2b2b35;
+      color: #4a90e2;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+    tr:hover {
+      background: #262633;
+    }
+    form {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea {
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background: #1e1e26;
+      color: #eee;
+    }
+    input:focus, textarea:focus {
+      border-color: #4a90e2;
+      outline: none;
+    }
+    .error {
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <input type="radio" name="page" id="login" checked>
+  <input type="radio" name="page" id="signup">
+  <input type="radio" name="page" id="dashboard">
+  <input type="radio" name="page" id="products">
+  <input type="radio" name="page" id="orders">
+  <input type="radio" name="page" id="wishlist">
+  <input type="radio" name="page" id="users">
+
+  <header>
+    <h1>Admin Panel</h1>
+    <nav>
+      <label for="login">Login</label>
+      <label for="signup">Sign Up</label>
+      <label for="dashboard">Dashboard</label>
+      <label for="products">Products</label>
+      <label for="orders">Orders</label>
+      <label for="wishlist">Wishlist</label>
+      <label for="users">Users</label>
+    </nav>
+  </header>
+
+  <div class="pages">
+    <section id="login-page">
+      <h2>Admin Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <span id="loginEmailError" class="error"></span>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <span id="loginPasswordError" class="error"></span>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <section id="signup-page">
+      <h2>Sign Up</h2>
+      <form id="signupForm">
+        <input type="text" id="signupName" placeholder="Full Name" required>
+        <span id="signupNameError" class="error"></span>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <span id="signupEmailError" class="error"></span>
+        <input type="password" id="signupPassword" placeholder="Password" required>
+        <span id="signupPasswordError" class="error"></span>
+        <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+        <span id="signupConfirmError" class="error"></span>
+        <button type="submit">Create Account</button>
+      </form>
+    </section>
+
+    <section id="dashboard-page">
+      <h2>Dashboard Overview</h2>
+      <p>Quick summary of your store performance and activities.</p>
+      <div class="stats">
+        <div class="card">
+          <h3>120+</h3>
+          <p>Total Products</p>
+        </div>
+        <div class="card">
+          <h3>45</h3>
+          <p>New Orders</p>
+        </div>
+        <div class="card">
+          <h3>250</h3>
+          <p>Active Users</p>
+        </div>
+        <div class="card">
+          <h3>₹1.2L</h3>
+          <p>Revenue</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="products-page">
+      <h2>Manage Products</h2>
+      <table>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+        <tr>
+          <td>SpeedRun X1</td>
+          <td>Running</td>
+          <td>₹3,499</td>
+          <td>25</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+        <tr>
+          <td>Urban Flex</td>
+          <td>Casual</td>
+          <td>₹4,999</td>
+          <td>15</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+        <tr>
+          <td>Air Max</td>
+          <td>Formal</td>
+          <td>₹5,499</td>
+          <td>30</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+      </table>
+      <h3 style="margin-top:40px; color:#4a90e2;">Add New Product</h3>
+      <form>
+        <input type="text" placeholder="Product Name">
+        <input type="text" placeholder="Category">
+        <input type="number" placeholder="Price">
+        <input type="number" placeholder="Stock Quantity">
+        <button>Add Product</button>
+      </form>
+    </section>
+
+    <section id="orders-page">
+      <h2>Manage Orders</h2>
+      <table>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        <tr>
+          <td>#00125</td>
+          <td>Ravi Kumar</td>
+          <td>Oct 30, 2025</td>
+          <td>₹9,998</td>
+          <td>Pending</td>
+          <td><button>View</button></td>
+        </tr>
+        <tr>
+          <td>#00126</td>
+          <td>Priya Patel</td>
+          <td>Oct 28, 2025</td>
+          <td>₹5,499</td>
+          <td>Shipped</td>
+          <td><button>View</button></td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="wishlist-page">
+      <h2>Customer Wishlists</h2>
+      <table>
+        <tr>
+          <th>User</th>
+          <th>Product</th>
+          <th>Added On</th>
+          <th>Action</th>
+        </tr>
+        <tr>
+          <td>Neha Sharma</td>
+          <td>Air Max</td>
+          <td>Oct 25, 2025</td>
+          <td><button>Remove</button></td>
+        </tr>
+        <tr>
+          <td>Arjun Mehta</td>
+          <td>Urban Flex</td>
+          <td>Oct 27, 2025</td>
+          <td><button>Remove</button></td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="users-page">
+      <h2>Manage Users</h2>
+      <table>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+        <tr>
+          <td>#101</td>
+          <td>Ravi Kumar</td>
+          <td>ravi@example.com</td>
+          <td>Customer</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+        <tr>
+          <td>#102</td>
+          <td>Admin User</td>
+          <td>admin@shoestore.com</td>
+          <td>Admin</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let valid = true;
+      const email = document.getElementById("loginEmail");
+      const password = document.getElementById("loginPassword");
+      const emailError = document.getElementById("loginEmailError");
+      const passError = document.getElementById("loginPasswordError");
+      emailError.textContent = "";
+      passError.textContent = "";
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (!email.value.match(emailPattern)) {
+        emailError.textContent = "Enter a valid email address";
+        valid = false;
+      }
+      if (password.value.trim().length < 6) {
+        passError.textContent = "Password must be at least 6 characters";
+        valid = false;
+      }
+      if (valid) {
+        alert("Login successful!");
+      }
+    });
+
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let valid = true;
+      const name = document.getElementById("signupName");
+      const email = document.getElementById("signupEmail");
+      const password = document.getElementById("signupPassword");
+      const confirm = document.getElementById("signupConfirm");
+      const nameError = document.getElementById("signupNameError");
+      const emailError = document.getElementById("signupEmailError");
+      const passError = document.getElementById("signupPasswordError");
+      const confirmError = document.getElementById("signupConfirmError");
+      nameError.textContent = "";
+      emailError.textContent = "";
+      passError.textContent = "";
+      confirmError.textContent = "";
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (name.value.trim() === "") {
+        nameError.textContent = "Full name is required";
+        valid = false;
+      }
+      if (!email.value.match(emailPattern)) {
+        emailError.textContent = "Enter a valid email address";
+        valid = false;
+      }
+      if (password.value.length < 6) {
+        passError.textContent = "Password must be at least 6 characters";
+        valid = false;
+      }
+      if (password.value !== confirm.value) {
+        confirmError.textContent = "Passwords do not match";
+        valid = false;
+      }
+      if (valid) {
+        alert("Account created successfully!");
+      }
+    });
+  </script>
+</body>
+</html>
